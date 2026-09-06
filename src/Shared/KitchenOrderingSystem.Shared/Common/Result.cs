@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace KitchenOrderingSystem.Shared;
+namespace KitchenOrderingSystem.Shared.Common;
 
 public class Result
 {

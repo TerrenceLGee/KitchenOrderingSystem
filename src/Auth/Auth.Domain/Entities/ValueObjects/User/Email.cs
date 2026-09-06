@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Auth.Domain.Entities.ValueObjects;
+namespace Auth.Domain.Entities.ValueObjects.User;
 
 public sealed partial record Email
 {
@@ -9,10 +9,13 @@ public sealed partial record Email
     public Email(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            throw new ArgumentException("Email address cannot be null empty or whitespace");
+            throw new ArgumentException("Email address cannot be null empty or whitespace.");
+
+        if (value.Length > 50)
+            throw new ArgumentException("Email address cannot exceed 50 characters.");
 
         if (!IsValidEmail(value))
-            throw new ArgumentException("Email address is invalid");
+            throw new ArgumentException("Email address is invalid.");
         
         Value = value;
     }

@@ -1,1 +1,33 @@
-<Solution />
+<Solution>
+  <Folder Name="/Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+    <File Path="init.sql" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/Auth/">
+    <Project Path="src/Auth/Auth.Api/Auth.Api.csproj" />
+    <Project Path="src/Auth/Auth.Application/Auth.Application.csproj" />
+    <Project Path="src/Auth/Auth.Domain/Auth.Domain.csproj" />
+    <Project Path="src/Auth/Auth.Infrastructure/Auth.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Contracts/">
+    <Project Path="src/Contracts/KitchenOrderingSystem.Contracts/KitchenOrderingSystem.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/Kitchen/">
+    <Project Path="src/Kitchen/Kitchen.Api/Kitchen.Api.csproj" />
+    <Project Path="src/Kitchen/Kitchen.Application/Kitchen.Application.csproj" />
+    <Project Path="src/Kitchen/Kitchen.Domain/Kitchen.Domain.csproj" />
+    <Project Path="src/Kitchen/Kitchen.Infrastructure/Kitchen.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Ordering/">
+    <Project Path="src/Ordering/Ordering.Api/Ordering.Api.csproj" />
+    <Project Path="src/Ordering/Ordering.Application/Ordering.Application.csproj" />
+    <Project Path="src/Ordering/Ordering.Domain/Ordering.Domain.csproj" />
+    <Project Path="src/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Shared/">
+    <Project Path="src/Shared/KitchenOrderingSystem.Shared/KitchenOrderingSystem.Shared.csproj" />
+  </Folder>
+</Solution>

@@ -1,4 +1,4 @@
-namespace KitchenOrderingSystem.Shared;
+namespace KitchenOrderingSystem.Shared.Common;
 
 public record Error(
     string Code, 

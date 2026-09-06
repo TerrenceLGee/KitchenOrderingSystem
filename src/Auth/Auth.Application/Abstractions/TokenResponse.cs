@@ -1,3 +1,7 @@
 namespace Auth.Application.Abstractions;
 
-public record TokenResponse();
+public record TokenResponse(
+    string AccessToken,
+    string RefreshToken,
+    DateTime AccessTokenExpirationUtc,
+    DateTime RefreshTokenExpirationUtc);
