@@ -43,4 +43,9 @@ public class SigningKey : BaseEntity
             isActive,
             expiresAtUtc);
     }
+
+    public void DeactivateKey()
+    {
+        IsActive = false;
+    }
 }
