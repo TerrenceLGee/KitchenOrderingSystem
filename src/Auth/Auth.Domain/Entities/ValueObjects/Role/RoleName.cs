@@ -12,6 +12,6 @@ public sealed record RoleName
         if (value.Length > 50)
             throw new ArgumentException("Role name cannot exceed 50 characters");
 
-        Value = value;
+        Value = value.ToLower();
     }
 }

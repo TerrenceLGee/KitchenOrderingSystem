@@ -1,5 +1,6 @@
 using System.Security.Claims;
 
+using Auth.Api.Endpoints.Constants;
 using Auth.Api.Extensions;
 using Auth.Api.Queries;
 using Auth.Application.Command.Login;
@@ -10,7 +11,7 @@ using Auth.Application.Command.UpdateUser;
 
 using MediatR;
 
-namespace Auth.Api.Endpoints.Constants;
+namespace Auth.Api.Endpoints;
 
 public static class AuthEndpoints
 {
@@ -25,7 +26,7 @@ public static class AuthEndpoints
 
         api.MapPost(AuthConstants.Login, Login)
             .WithName("Login")
-            .WithSummary("Login to a new user account");
+            .WithSummary("Login to your user account");
 
         api.MapPost(AuthConstants.Logout, Logout)
             .WithName("Logout")
@@ -110,10 +111,26 @@ public static class AuthEndpoints
     }
 
     private static async Task<IResult> UpdateUserInfo(
-        UpdateUserCommand command,
+        UpdateUserQuery query,
+        HttpContext context,
         ISender sender,
         CancellationToken cancellationToken)
     {
+        var userIdClaim = context.User
+            .Claims
+            .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+            return TypedResults.Unauthorized();
+
+        var command = new UpdateUserCommand(
+            userId,
+            query.FirstName,
+            query.LastName,
+            query.Email,
+            query.ChallengeQuestion,
+            query.ChallengeAnswer);
+        
         var result = await sender.Send(command, cancellationToken);
 
         return result.IsSuccess

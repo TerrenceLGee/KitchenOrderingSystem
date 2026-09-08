@@ -1,4 +1,5 @@
 using Auth.Application.Abstractions;
+using Auth.Domain.Entities.ValueObjects.User;
 
 using KitchenOrderingSystem.Shared.Common;
 
@@ -18,10 +19,10 @@ public class LoginCommandHandler(
         LoginCommand command, 
         CancellationToken cancellationToken)
     {
-        var userEmail = command.Email.ToLower();
+        var userEmail = new Email(command.Email.ToLower());
 
         var user = await context.Users
-            .FirstOrDefaultAsync(u => u.Email.Value.ToLower().Equals(userEmail), cancellationToken);
+            .FirstOrDefaultAsync(u => u.Email == userEmail, cancellationToken);
 
         if (user is null)
         {
@@ -31,7 +32,7 @@ public class LoginCommandHandler(
             return Result.Failure<TokenResponse>(new Error(
                 "Invalid.Credentials",
                 "Invalid credentials provided.",
-                ErrorType.Unauthorized));
+                ErrorType.NotFound));
         }
 
         var userRoles = await context.UserRoles

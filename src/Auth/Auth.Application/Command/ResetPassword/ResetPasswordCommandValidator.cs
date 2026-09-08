@@ -16,7 +16,7 @@ internal sealed class ResetPasswordCommandValidator : AbstractValidator<ResetPas
             .EmailAddress()
             .WithMessage("{PropertyName} is invalid.");
 
-        RuleFor(x => x.OldPassword)
+        RuleFor(x => x.PreviousPassword)
             .NotEmpty()
             .WithMessage("{PropertyName} cannot be empty.")
             .NotNull()

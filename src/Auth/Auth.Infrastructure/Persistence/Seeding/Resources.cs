@@ -8,10 +8,10 @@ public static class Resources
     
     private static readonly Role[] SeedRoles =
     [
-        Role.Create("Admin", "Admin Role"),
-        Role.Create("Manager", "Manager Role"),
-        Role.Create("Chef", "Chef Role"),
-        Role.Create("Customer", "Customer Role")
+        Role.Create("admin", "Admin Role"),
+        Role.Create("manager", "Manager Role"),
+        Role.Create("chef", "Chef Role"),
+        Role.Create("customer", "Customer Role")
     ];
 
     private static readonly User[] SeedUsers =
@@ -19,7 +19,7 @@ public static class Resources
         User.Create(
             "Marvin",
             "Junior",
-            "admin@Example.com",
+            "admin@example.com",
             HashPassword(Password),
             "What is your mother's maiden name?",
             "Johnson"),
@@ -63,6 +63,18 @@ public static class Resources
         var customerUserRole = UserRole.Create(users[3].Id, roles[3].Id);
 
         return [adminUserRole, managerUserRole, chefUserRole, customerUserRole];
+    }
+
+    public static IEnumerable<UserPassword> GetUserPasswordsForSeeding()
+    {
+        var users = GetUsersForSeeding().ToArray();
+
+        var userPassword = UserPassword.Create(users[0].Id, users[0].Password.Value);
+        var managerPassword = UserPassword.Create(users[1].Id, users[1].Password.Value);
+        var chefPassword = UserPassword.Create(users[2].Id, users[2].Password.Value);
+        var customerPassword = UserPassword.Create(users[3].Id, users[3].Password.Value);
+
+        return [userPassword, managerPassword, chefPassword, customerPassword];
     }
 
 

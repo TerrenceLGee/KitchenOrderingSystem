@@ -17,7 +17,7 @@ public sealed partial record Email
         if (!IsValidEmail(value))
             throw new ArgumentException("Email address is invalid.");
         
-        Value = value;
+        Value = value.ToLower();
     }
 
     private static bool IsValidEmail(string emailAddress)

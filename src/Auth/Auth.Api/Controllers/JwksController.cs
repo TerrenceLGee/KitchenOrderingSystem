@@ -11,7 +11,7 @@ namespace Auth.Api.Controllers;
 [ApiController]
 public class JwksController(IApplicationDbContext context) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("jwks.json")]
     public IActionResult GetJwks()
     {
         var keys = context.SigningKeys

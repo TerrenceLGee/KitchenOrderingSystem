@@ -1,4 +1,6 @@
 using Auth.Application.Abstractions;
+using Auth.Domain.Entities;
+using Auth.Domain.Entities.ValueObjects.User;
 
 using KitchenOrderingSystem.Shared.Common;
 
@@ -17,10 +19,10 @@ public class ResetPasswordCommandHandler(
         ResetPasswordCommand command, 
         CancellationToken cancellationToken)
     {
-        var userEmail = command.Email.ToLower();
+        var userEmail = new Email(command.Email.ToLower());
 
         var user = await context.Users
-            .FirstOrDefaultAsync(u => u.Email.Value.ToLower().Equals(userEmail), cancellationToken);
+            .FirstOrDefaultAsync(u => u.Email == userEmail, cancellationToken);
 
         if (user is null)
         {
@@ -33,9 +35,9 @@ public class ResetPasswordCommandHandler(
                 ErrorType.Unauthorized));
         }
 
-        var isOldPasswordValid = BCrypt.Net.BCrypt.Verify(command.OldPassword, user.Password.Value);
+        var isPreviousPasswordValid = BCrypt.Net.BCrypt.Verify(command.PreviousPassword, user.Password.Value);
 
-        if (!isOldPasswordValid)
+        if (!isPreviousPasswordValid)
         {
             logger.LogWarning(
                 "Someone using the email ({Email}) tried to reset the password associated with this account with an invalid 'old' password.",
@@ -46,10 +48,35 @@ public class ResetPasswordCommandHandler(
                 ErrorType.Unauthorized));
         }
 
-        var newHashedPassword = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
+        var isPreviouslyUsedPassword = false;
+
+        var previousPasswords = await context.UserPasswords
+            .Where(up => up.UserId == user.Id)
+            .ToListAsync(cancellationToken);
+
+        foreach (var password in previousPasswords)
+        {
+            isPreviouslyUsedPassword = BCrypt.Net.BCrypt.Verify(command.NewPassword, password.HashedPassword);
+            if (isPreviouslyUsedPassword) break;
+        }
+
+        if (isPreviouslyUsedPassword)
+        {
+            logger.LogWarning(
+                "User with email ({Email}) is trying to reset their password to a previously used password which is not allowed.",
+                command.Email);
+            return Result.Failure(new Error(
+                "PreviousPassword.CannotBeResused",
+                "Cannot reset password to a previously used password",
+                ErrorType.BadRequest));
+        }
         
+        var newHashedPassword = BCrypt.Net.BCrypt.HashPassword(command.NewPassword);
         user.ResetPassword(newHashedPassword);
 
+        var newHashedPasswordToStore = UserPassword.Create(user.Id, newHashedPassword);
+
+        await context.UserPasswords.AddAsync(newHashedPasswordToStore, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
         
         logger.LogInformation(

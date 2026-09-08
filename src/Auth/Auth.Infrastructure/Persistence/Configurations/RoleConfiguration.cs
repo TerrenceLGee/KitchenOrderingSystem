@@ -22,6 +22,6 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasConversion(new RoleDescriptionConverter())
             .IsRequired();
 
-        builder.HasIndex(r => r.Name.Value);
+        builder.HasIndex(r => r.Name);
     }
 }

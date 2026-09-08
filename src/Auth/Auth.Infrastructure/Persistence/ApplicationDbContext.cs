@@ -15,6 +15,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<SigningKey> SigningKeys => Set<SigningKey>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<UserPassword> UserPasswords => Set<UserPassword>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -56,6 +57,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                     dependentDataAdded = true;
                 }
 
+                if (!await context.Set<UserPassword>().AnyAsync(cancellationToken))
+                {
+                    var userPasswords = Resources.GetUserPasswordsForSeeding();
+                    await context.Set<UserPassword>().AddRangeAsync(userPasswords, cancellationToken);
+                    dependentDataAdded = true;
+                }
+
                 if (dependentDataAdded)
                 {
                     await context.SaveChangesAsync(cancellationToken);
@@ -90,6 +98,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 {
                     var userRoles = Resources.GetUserRolesForSeeding();
                     context.Set<UserRole>().AddRange(userRoles);
+                    dependentDataAdded = true;
+                }
+
+                if (!context.Set<UserPassword>().Any())
+                {
+                    var userPasswords = Resources.GetUserPasswordsForSeeding();
+                    context.Set<UserPassword>().AddRange(userPasswords);
                     dependentDataAdded = true;
                 }
 

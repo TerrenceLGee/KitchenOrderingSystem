@@ -12,6 +12,6 @@ public sealed record FirstName
         if (value.Length > 75)
             throw new ArgumentException("First name cannot exceed 75 characters.");
         
-        Value = value;
+        Value = value.ToLower();
     }
 }

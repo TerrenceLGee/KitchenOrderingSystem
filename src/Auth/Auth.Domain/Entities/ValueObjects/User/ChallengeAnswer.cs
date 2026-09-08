@@ -12,6 +12,6 @@ public sealed record ChallengeAnswer
         if (value.Length > 1024)
             throw new ArgumentException("Challenge answer cannot exceed 1024 characters.");
         
-        Value = value;
+        Value = value.ToLower();
     }
 }

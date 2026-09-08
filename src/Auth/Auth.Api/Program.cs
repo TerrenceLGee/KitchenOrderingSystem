@@ -1,4 +1,5 @@
 using Auth.Api;
+using Auth.Api.Endpoints;
 using Auth.Api.Endpoints.Constants;
 using Auth.Application;
 using Auth.Infrastructure;
@@ -49,6 +50,7 @@ try
     app.UseAuthorization();
 
 
+    app.MapControllers();
     app.MapAuthEndpoints();
     app.Run();
 }

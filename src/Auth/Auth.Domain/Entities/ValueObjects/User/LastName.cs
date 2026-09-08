@@ -12,6 +12,6 @@ public sealed record LastName
         if (value.Length > 75)
             throw new ArgumentException("Last name cannot exceed 75 characters.");
         
-        Value = value;
+        Value = value.ToLower();
     }
 }

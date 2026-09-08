@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 using Auth.Application.Abstractions;
+using Auth.Domain.Entities.ValueObjects.RefreshToken;
 
 using KitchenOrderingSystem.Shared.Common;
 
@@ -20,10 +21,10 @@ public class LogoutCommandHandler(
         LogoutCommand command, 
         CancellationToken cancellationToken)
     {
-        var hashedToken = HashToken(command.RefreshToken);
+        var hashedToken = new Token(HashToken(command.RefreshToken));
 
         var storedRefreshToken = await context.RefreshTokens
-            .FirstOrDefaultAsync(rt => rt.Token.Value == hashedToken
+            .FirstOrDefaultAsync(rt => rt.Token == hashedToken
                                        && rt.UserId == command.UserId, cancellationToken);
 
         if (storedRefreshToken is null)

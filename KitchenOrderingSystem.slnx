@@ -30,4 +30,9 @@
   <Folder Name="/src/Shared/">
     <Project Path="src/Shared/KitchenOrderingSystem.Shared/KitchenOrderingSystem.Shared.csproj" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/Auth/">
+    <Project Path="tests/Auth/Auth.IntegrationTests/Auth.IntegrationTests.csproj" />
+    <Project Path="tests/Auth/Auth.UnitTests/Auth.UnitTests.csproj" />
+  </Folder>
 </Solution>

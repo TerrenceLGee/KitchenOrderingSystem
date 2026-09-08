@@ -39,7 +39,8 @@ public static class DependencyInjection
                     IssuerSigningKeyResolver = (_, _, _, _) =>
                     {
                         var httpClient = new HttpClient();
-                        var jwks = httpClient.GetStringAsync($"{jwtSettings.Issuer}/.well-known/jwks.json")
+                        var jwksUrl = $"{jwtSettings.Issuer}/.well-known/jwks.json";
+                        var jwks = httpClient.GetStringAsync(jwksUrl)
                             .Result;
                         var keys = new JsonWebKeySet(jwks);
                         return keys.Keys;

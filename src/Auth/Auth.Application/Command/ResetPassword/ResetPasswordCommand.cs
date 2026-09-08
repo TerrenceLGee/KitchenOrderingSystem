@@ -6,6 +6,6 @@ namespace Auth.Application.Command.ResetPassword;
 
 public record ResetPasswordCommand(
     string Email,
-    string OldPassword,
+    string PreviousPassword,
     string NewPassword,
     string ConfirmNewPassword) : IRequest<Result>;

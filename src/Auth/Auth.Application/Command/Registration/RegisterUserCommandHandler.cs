@@ -1,5 +1,6 @@
 using Auth.Application.Abstractions;
 using Auth.Domain.Entities;
+using Auth.Domain.Entities.ValueObjects.User;
 
 using KitchenOrderingSystem.Shared.Common;
 
@@ -18,9 +19,9 @@ public class RegisterUserCommandHandler(
         RegisterUserCommand command, 
         CancellationToken cancellationToken)
     {
-        var emailToCheck = command.Email.ToLower();
+        var emailToCheck = new Email(command.Email.ToLower());
         var existingUser = await context.Users
-            .FirstOrDefaultAsync(u => u.Email.Value.ToLower().Equals(emailToCheck), cancellationToken);
+            .FirstOrDefaultAsync(u => u.Email == emailToCheck, cancellationToken);
 
         if (existingUser is not null)
         {
@@ -43,12 +44,16 @@ public class RegisterUserCommandHandler(
             command.Email,
             hashedPassword,
             command.ChallengeQuestion,
-            command.ChallengeQuestion);
+            command.ChallengeAnswer);
 
         await context.Users.AddAsync(user, cancellationToken);
 
+        var hashedUserPassword = UserPassword.Create(user.Id, hashedPassword);
+
+        await context.UserPasswords.AddAsync(hashedUserPassword, cancellationToken);
+
         var role = await context.Roles
-            .FirstOrDefaultAsync(r => r.Name.Equals("Customer"), cancellationToken);
+            .FirstOrDefaultAsync(r => r.Name.Equals("customer"), cancellationToken);
 
         if (role is not null)
         {
