@@ -4,6 +4,8 @@ using System.Net.Http.Json;
 using Auth.Application.Abstractions;
 using Auth.Infrastructure.Persistence;
 
+using FluentAssertions;
+
 using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +28,7 @@ public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
         Context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     }
 
-    protected async Task LoginAndSetAuthenticationAsync(string email, string password)
+    protected async Task<string> LoginAndSetAuthenticationAsync(string email, string password)
     {
         var loginResponse = await Client
             .PostAsJsonAsync("/api/auth/login", new { Email = email, Password = password },
@@ -36,7 +38,11 @@ public class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
         var loginResult = await loginResponse.Content
             .ReadFromJsonAsync<TokenResponse>(TestContext.Current.CancellationToken);
 
+        loginResult.Should().NotBeNull();
+
         Client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", loginResult!.AccessToken);
+            new AuthenticationHeaderValue("Bearer", loginResult.AccessToken);
+
+        return loginResult.RefreshToken;
     }
 }

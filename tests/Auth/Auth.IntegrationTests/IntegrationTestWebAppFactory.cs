@@ -1,6 +1,8 @@
 using Auth.Application.Abstractions;
 using Auth.Infrastructure.Persistence;
 
+using KitchenOrderingSystem.Shared.Common;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,9 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             {
                 options.UseNpgsql(_dbContainer.GetConnectionString());
             });
+
+            services.AddHttpClient(Constants.HttpClientName)
+                .ConfigurePrimaryHttpMessageHandler(() => Server.CreateHandler());
         });
     }
 

@@ -3,6 +3,8 @@ using Auth.Infrastructure.Persistence;
 using Auth.Infrastructure.Services;
 using Auth.Infrastructure.Settings;
 
+using KitchenOrderingSystem.Shared.Common;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +16,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpClient(Constants.HttpClientName);
+        
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
@@ -35,16 +39,21 @@ public static class DependencyInjection
                     ValidIssuer = jwtSettings.Issuer,
                     ValidateAudience = false,
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKeyResolver = (_, _, _, _) =>
-                    {
-                        var httpClient = new HttpClient();
-                        var jwksUrl = $"{jwtSettings.Issuer}/.well-known/jwks.json";
-                        var jwks = httpClient.GetStringAsync(jwksUrl)
-                            .Result;
-                        var keys = new JsonWebKeySet(jwks);
-                        return keys.Keys;
-                    }
+                    ValidateIssuerSigningKey = true
+                };
+            });
+
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IHttpClientFactory>((options, httpClientFactory) =>
+            {
+                options.TokenValidationParameters.IssuerSigningKeyResolver = (_, _, _, _) =>
+                {
+                    var httpClient = httpClientFactory.CreateClient(Constants.HttpClientName);
+                    var jwksUrl = $"{jwtSettings.Issuer}/.well-known/jwks.json";
+                    var jwks = httpClient.GetStringAsync(jwksUrl)
+                        .Result;
+                    var keys = new JsonWebKeySet(jwks);
+                    return keys.Keys;
                 };
             });
 

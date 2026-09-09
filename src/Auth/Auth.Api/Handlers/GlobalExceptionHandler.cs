@@ -21,6 +21,8 @@ public class GlobalExceptionHandler(
 
         (int statusCode, string title) = MapException(exception);
 
+        httpContext.Response.StatusCode = statusCode;
+
         var problemDetails = new ProblemDetails
         {
             Status = statusCode,

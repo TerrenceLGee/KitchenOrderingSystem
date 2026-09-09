@@ -32,7 +32,7 @@ public class ResetPasswordCommandHandler(
             return Result.Failure(new Error(
                 "Invalid.Credentials",
                 "Invalid credentials supplied",
-                ErrorType.Unauthorized));
+                ErrorType.NotFound));
         }
 
         var isPreviousPasswordValid = BCrypt.Net.BCrypt.Verify(command.PreviousPassword, user.Password.Value);
@@ -40,7 +40,7 @@ public class ResetPasswordCommandHandler(
         if (!isPreviousPasswordValid)
         {
             logger.LogWarning(
-                "Someone using the email ({Email}) tried to reset the password associated with this account with an invalid 'old' password.",
+                "Someone using the email ({Email}) tried to reset the password associated with this account with an invalid 'previous' password.",
                 userEmail);
             return Result.Failure(new Error(
                 "OldPassword.Invalid",

@@ -91,11 +91,9 @@ public static class AuthEndpoints
             query.IsLogoutFromAllDevices,
             email);
 
-        var result = await sender.Send(command, cancellationToken);
+        _ = await sender.Send(command, cancellationToken);
 
-        return result.IsSuccess
-            ? TypedResults.NoContent()
-            : result.ToProblemDetails();
+        return TypedResults.Ok();
     }
 
     private static async Task<IResult> ResetPassword(
