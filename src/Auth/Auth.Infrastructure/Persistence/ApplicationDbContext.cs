@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices.ComTypes;
-
 using Auth.Application.Abstractions;
 using Auth.Domain.Entities;
 using Auth.Infrastructure.Persistence.Seeding;

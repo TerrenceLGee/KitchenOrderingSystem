@@ -1,6 +1,5 @@
 using Auth.Api;
 using Auth.Api.Endpoints;
-using Auth.Api.Endpoints.Constants;
 using Auth.Application;
 using Auth.Infrastructure;
 

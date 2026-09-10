@@ -27,7 +27,7 @@ public class LogoutTests(IntegrationTestWebAppFactory factory) : BaseIntegration
     }
 
     [Fact]
-    public async Task Logout_Returns_StatusCode_200OK_Even_When_RefreshToken_IsInvalid()
+    public async Task Logout_Returns_StatusCode_404NotFound_When_RefreshToken_IsInvalid()
     {
         _ = await LoginAndSetAuthenticationAsync("customer@example.com", "Pa$$w0rd");
         
@@ -39,8 +39,8 @@ public class LogoutTests(IntegrationTestWebAppFactory factory) : BaseIntegration
             logoutQuery,
             TestContext.Current.CancellationToken);
 
-        logoutResponse.IsSuccessStatusCode.Should().BeTrue();
-        logoutResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+        logoutResponse.IsSuccessStatusCode.Should().BeFalse();
+        logoutResponse.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     private static string GenerateInvalidRefreshToken()

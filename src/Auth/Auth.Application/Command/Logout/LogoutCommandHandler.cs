@@ -32,7 +32,22 @@ public class LogoutCommandHandler(
             logger.LogWarning(
                 "User ({Info}) is trying to logout with an invalid/non-existent refresh token.",
                 command.Email ?? command.UserId.ToString());
-            return Result.Success();
+            return Result.Failure(new Error(
+                "RefreshToken.Invalid",
+                "Refresh token is invalid",
+                ErrorType.NotFound));
+        }
+
+        if (storedRefreshToken.ExpiresAtUtc < DateTime.UtcNow)
+        {
+            logger.LogWarning(
+                "User ({Info}) is trying to logout with a expired refresh token. The refresh token expired at: {Time}",
+                command.Email ?? command.UserId.ToString(),
+                storedRefreshToken.ExpiresAtUtc);
+            return Result.Failure(new Error(
+                "RefreshToken.Expired",
+                "Refresh token is expired",
+                ErrorType.BadRequest));
         }
 
         if (storedRefreshToken.IsRevoked)
@@ -40,7 +55,10 @@ public class LogoutCommandHandler(
             logger.LogWarning(
                 "User ({Info}) is trying to logout with an already revoked refresh token.",
                 command.Email ?? command.UserId.ToString());
-            return Result.Success();
+            return Result.Failure(new Error(
+                "RefreshToken.Revoked",
+                "Refresh token has already been revoked",
+                ErrorType.Conflict));
         }
         
         storedRefreshToken.Revoke();

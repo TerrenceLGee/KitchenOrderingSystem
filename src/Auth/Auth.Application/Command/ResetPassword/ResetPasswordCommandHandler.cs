@@ -43,7 +43,7 @@ public class ResetPasswordCommandHandler(
                 "Someone using the email ({Email}) tried to reset the password associated with this account with an invalid 'previous' password.",
                 userEmail);
             return Result.Failure(new Error(
-                "OldPassword.Invalid",
+                "PreviousPassword.Invalid",
                 "Password cannot be reset because old password entered is invalid/incorrect",
                 ErrorType.Unauthorized));
         }
@@ -66,7 +66,7 @@ public class ResetPasswordCommandHandler(
                 "User with email ({Email}) is trying to reset their password to a previously used password which is not allowed.",
                 command.Email);
             return Result.Failure(new Error(
-                "PreviousPassword.CannotBeResused",
+                "PreviousPassword.CannotBeReused",
                 "Cannot reset password to a previously used password",
                 ErrorType.BadRequest));
         }

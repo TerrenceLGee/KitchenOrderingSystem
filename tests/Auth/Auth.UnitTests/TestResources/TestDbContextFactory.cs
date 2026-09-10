@@ -4,7 +4,7 @@ using Auth.UnitTests.Application.Helpers;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.UnitTests.Domain.Resources;
+namespace Auth.UnitTests.TestResources;
 
 public static class TestDbContextFactory
 {

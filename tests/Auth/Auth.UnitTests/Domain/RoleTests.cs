@@ -1,5 +1,3 @@
-using System.Data;
-
 using Auth.Domain.Entities;
 
 using FluentAssertions;

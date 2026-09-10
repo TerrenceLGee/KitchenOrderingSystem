@@ -1,4 +1,3 @@
-using Auth.Domain.Entities.ValueObjects;
 using Auth.Domain.Entities.ValueObjects.User;
 
 using Email = Auth.Domain.Entities.ValueObjects.User.Email;
