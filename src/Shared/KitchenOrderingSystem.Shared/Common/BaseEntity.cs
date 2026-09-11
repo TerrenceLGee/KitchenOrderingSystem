@@ -1,4 +1,4 @@
-namespace Auth.Domain.Entities;
+namespace KitchenOrderingSystem.Shared.Common;
 
 public abstract class BaseEntity
 {

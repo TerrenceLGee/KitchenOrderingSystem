@@ -1,5 +1,7 @@
 using Auth.Domain.Entities.ValueObjects.SigningKey;
 
+using KitchenOrderingSystem.Shared.Common;
+
 namespace Auth.Domain.Entities;
 
 public class SigningKey : BaseEntity

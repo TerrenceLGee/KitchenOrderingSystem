@@ -1,3 +1,5 @@
+using KitchenOrderingSystem.Shared.Common;
+
 namespace Auth.Domain.Entities;
 
 public class UserPassword : BaseEntity

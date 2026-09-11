@@ -1,5 +1,7 @@
 using Auth.Domain.Entities.ValueObjects.User;
 
+using KitchenOrderingSystem.Shared.Common;
+
 using Email = Auth.Domain.Entities.ValueObjects.User.Email;
 
 namespace Auth.Domain.Entities;
